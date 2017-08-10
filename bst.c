@@ -211,6 +211,52 @@ int bst_leaf_count(const BST* bst) {
 
 /**
  *
+ * 判断该二叉查找树是否为AVL树内部递归函数
+ *
+ * @param root 根节点地址
+ *
+ * @return TRUE 为AVL树
+ *         FALSE 不为AVL树
+ *
+ */
+static BOOL bst_is_avl_internal(const BSTNode* root) {
+	int lheight, rheight;
+	int diff;
+
+	//根节点为NULL时，为AVL树
+	if (!root) {
+		return TRUE;
+	}
+	//获取左子树高度
+	lheight = bst_height_internal(root->lchild);
+	//获取右子树高度
+	rheight = bst_height_internal(root->rchild);
+	//高度差超过1时，不是AVL树
+	diff = lheight >= rheight ? lheight - rheight : rheight - lheight;
+	if (diff > 1) {
+		return FALSE;
+	}
+	//左右子树均为AVL树时，为AVL树
+	return (bst_is_avl_internal(root->lchild)
+			&& bst_is_avl_internal(root->rchild)) ? TRUE : FALSE;
+}
+
+/**
+ *
+ * 判断该二叉查找树是否为AVL树
+ *
+ * @param bst 二叉查找树地址
+ *
+ * @return TRUE 为AVL树
+ *         FALSE 不为AVL树
+ *
+ */
+BOOL bst_is_avl(const BST* bst) {
+	return bst_is_avl_internal(bst->root);
+}
+
+/**
+ *
  * 比较两个键的大小，可根据键修改
  *
  * @param k1 键1
@@ -589,6 +635,7 @@ void bst_show(const BST* bst) {
 	printf("节点数：%d\n", bst_size(bst));
 	printf("高度：%d\n", bst_height(bst));
 	printf("叶子数：%d\n", bst_leaf_count(bst));
+	printf("是否为AVL树：%s\n", bst_is_avl(bst) ? "TRUE" : "FALSE");
 	printf("前序遍历结果：\n");
 	bst_preorder(bst, bst_visit);
 	printf("中序遍历结果：\n");
