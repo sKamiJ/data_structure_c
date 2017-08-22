@@ -2,15 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-//定义BOOL类型
-typedef int BOOL;
-#ifndef TRUE
-#define TRUE 1
-#endif
-#ifndef FALSE
-#define FALSE 0
-#endif
-
 //定义哈夫曼编码节点
 typedef struct HuffmanCode {
 	char data;	//待编码数据
