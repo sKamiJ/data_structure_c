@@ -215,30 +215,36 @@ int bst_leaf_count(const BST* bst) {
  *
  * @param root 根节点地址
  *
- * @return TRUE 为AVL树
- *         FALSE 不为AVL树
+ * @return 非负时表示该树高度，-1表示该树不是AVL树
  *
  */
-static BOOL bst_is_avl_internal(const BSTNode* root) {
+static int bst_is_avl_internal(const BSTNode* root) {
 	int lheight, rheight;
 	int diff;
 
-	//根节点为NULL时，为AVL树
+	//根节点为NULL时，高度为0
 	if (!root) {
-		return TRUE;
+		return 0;
 	}
 	//获取左子树高度
-	lheight = bst_height_internal(root->lchild);
+	lheight = bst_is_avl_internal(root->lchild);
+	//左子树不是AVL树，该树也不是AVL树
+	if (lheight < 0) {
+		return -1;
+	}
 	//获取右子树高度
-	rheight = bst_height_internal(root->rchild);
+	rheight = bst_is_avl_internal(root->rchild);
+	//右子树不是AVL树，该树也不是AVL树
+	if (rheight < 0) {
+		return -1;
+	}
 	//高度差超过1时，不是AVL树
 	diff = lheight >= rheight ? lheight - rheight : rheight - lheight;
 	if (diff > 1) {
-		return FALSE;
+		return -1;
 	}
-	//左右子树均为AVL树时，为AVL树
-	return (bst_is_avl_internal(root->lchild)
-			&& bst_is_avl_internal(root->rchild)) ? TRUE : FALSE;
+	//该树为AVL树，返回该树高度
+	return (lheight > rheight ? lheight : rheight) + 1;
 }
 
 /**
@@ -252,7 +258,12 @@ static BOOL bst_is_avl_internal(const BSTNode* root) {
  *
  */
 BOOL bst_is_avl(const BST* bst) {
-	return bst_is_avl_internal(bst->root);
+	int height;
+
+	//获取该树高度
+	height = bst_is_avl_internal(bst->root);
+	//小于0时表示该树不是AVL树
+	return height < 0 ? FALSE : TRUE;
 }
 
 /**
