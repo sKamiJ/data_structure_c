@@ -2,15 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-//定义BOOL类型
-typedef int BOOL;
-#ifndef TRUE
-#define TRUE 1
-#endif
-#ifndef FALSE
-#define FALSE 0
-#endif
-
 //定义排序元素
 typedef struct Elem {
 	int e;
