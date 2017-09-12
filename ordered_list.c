@@ -130,18 +130,12 @@ BOOL ordered_list_insert(OrderedList* ol, const OrderedListKey* key,
 	//有序表已满，扩容
 	if (ol->len >= ol->capacity) {
 		//新容量为原容量*2+1
-		p = (OrderedListNode*) malloc(
+		p = (OrderedListNode*) realloc(ol->nodes,
 				sizeof(OrderedListNode) * ((ol->capacity << 1) + 1));
 		//内存不足，错误
 		if (!p) {
 			return FALSE;
 		}
-		//复制所有节点
-		for (i = 0; i < ol->len; ++i) {
-			p[i] = ol->nodes[i];
-		}
-		//释放原节点
-		free(ol->nodes);
 		//更新节点和容量
 		ol->nodes = p;
 		ol->capacity = (ol->capacity << 1) + 1;
